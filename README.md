@@ -74,14 +74,6 @@ setup.kibana:
   host: "http://kibana:5601"
 ```
 
-#### 🛠️ Commande clé :
-
-```bash
-docker exec -it packetbeat bash
-packetbeat -e -c /etc/packetbeat/packetbeat.yml -path.data /tmp/beatdata -d "*"
-```
-
----
 
 ### 4. Architecture et Workflow
 
@@ -108,7 +100,8 @@ packetbeat -e -c /etc/packetbeat/packetbeat.yml -path.data /tmp/beatdata -d "*"
 [PCAP File] → [Packetbeat] → [Elasticsearch] → [Kibana Dashboard]
 ```
 
----
+![image](https://github.com/user-attachments/assets/ba7c8ed7-c2e1-4db4-b5a2-1e0ddf21c391)
+
 
 ### 5. Fichier PCAP utilisé
 
@@ -116,7 +109,6 @@ packetbeat -e -c /etc/packetbeat/packetbeat.yml -path.data /tmp/beatdata -d "*"
 * Taille : environ 200 Mo
 * Source : trafic industriel SCADA/ICS issu d’un environnement simulé
 
----
 
 ### 6. Résultats dans Kibana
 
