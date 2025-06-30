@@ -1,6 +1,5 @@
 ## Rapport d’analyse réseau avec la stack ELK et Packetbeat
 
----
 
 ### 1. Environnement construit
 
