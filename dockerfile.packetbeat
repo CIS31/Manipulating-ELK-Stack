@@ -1,0 +1,8 @@
+FROM docker.elastic.co/beats/packetbeat:8.12.2
+
+USER root
+
+COPY packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
+COPY pcap /pcap
+
+RUN chmod 600 /etc/packetbeat/packetbeat.yml

@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2 
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - elk
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - elk
+
+  packetbeat:
+    build:
+      context: .
+      dockerfile: dockerfile.packetbeat
+    container_name: packetbeat
+    user: root
+    command: >
+      sh -c "
+        until curl -s http://elasticsearch:9200 >/dev/null; do
+          echo 'Waiting for Elasticsearch...';
+          sleep 15;
+        done;
+        packetbeat -e -c /etc/packetbeat/packetbeat.yml -path.data /tmp/beatdata -d '*'
+      "
+
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+      - SYS_PTRACE
+
+volumes:
+  esdata:
+
+networks:
+  elk:
+    driver: bridge
